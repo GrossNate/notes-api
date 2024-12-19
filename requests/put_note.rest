@@ -1,0 +1,6 @@
+PUT http://localhost:3000/api/notes/123
+Content-Type: application/json
+
+{
+  "content": "Updating content rocks!"
+}
