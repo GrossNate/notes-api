@@ -1,6 +1,6 @@
 import { NoteRow } from "../types";
 import { dbQuery } from "../utils/db-query";
-import { noteRowArrayZodSchema } from "../zodSchemas";
+import { addedRowZodSchema, noteRowArrayZodSchema } from "../zodSchemas";
 
 export const getNotesForUser = async (username: string): Promise<NoteRow[]> => {
   const result = await dbQuery(
@@ -14,11 +14,17 @@ export const getNotesForUser = async (username: string): Promise<NoteRow[]> => {
 export const addNoteForUser = async (
   username: string,
   content: string
-): Promise<boolean> => {
+): Promise<{rowCount: number, rows: NoteRow[]}> => {
   const result = await dbQuery(
-    "INSERT INTO notes (username, content) VALUES ($1, $2)",
+    "INSERT INTO notes (username, content) VALUES ($1, $2) RETURNING *",
     username,
     content
   );
-  return result.rowCount !== null && result.rowCount > 0;
+  const parsedResult = addedRowZodSchema.parse(result);
+  return parsedResult;
+};
+
+export const deleteNote = async (noteId: string, username: string): Promise<boolean> => {
+  const result = await dbQuery("DELETE FROM notes WHERE id = $1 AND username = $2", noteId, username);
+  return result.rowCount === null || result.rowCount > 0;
 };

@@ -11,7 +11,6 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 const checkAuthentication: express.Handler = (req, res, next) => {
-  console.log(req.cookies);
   const parsedToken = containsTokenStringZodSchema.safeParse(req.cookies);
   if (parsedToken.success && parsedToken.data.token !== "") {
     safeAssertString(TOKEN_SECRET);

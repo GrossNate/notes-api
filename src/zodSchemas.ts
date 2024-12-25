@@ -28,3 +28,8 @@ export const postNoteZodSchema = z.object({
   username: z.string(),
   content: z.string()
 });
+
+export const addedRowZodSchema = z.object({
+  rowCount: z.number(),
+  rows: noteRowArrayZodSchema
+});
