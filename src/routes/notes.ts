@@ -5,7 +5,7 @@ import { addNoteForUser, getNotesForUser } from "../models/notes";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const getNotesUser = getNotesZodSchema.parse(req.body);
+  const getNotesUser = getNotesZodSchema.parse(req.cookies);
   const results = await getNotesForUser(getNotesUser.username);
   res.json(results);
 });

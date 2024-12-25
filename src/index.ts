@@ -7,9 +7,12 @@ import { safeAssertString } from './types';
 import { containsTokenStringZodSchema } from './zodSchemas';
 import jsonwebtoken, { JsonWebTokenError } from "jsonwebtoken";
 import { logOnlyInDev } from './utils/devHelpers';
+import cors from "cors";
+import cookieParser from "cookie-parser";
 
 const checkAuthentication: express.Handler = (req, res, next) => {
-  const parsedToken = containsTokenStringZodSchema.safeParse(req.body);
+  console.log(req.cookies);
+  const parsedToken = containsTokenStringZodSchema.safeParse(req.cookies);
   if (parsedToken.success && parsedToken.data.token !== "") {
     safeAssertString(TOKEN_SECRET);
     try {
@@ -43,6 +46,8 @@ safeAssertString(MONGODB_URI);
 void connect(MONGODB_URI);
 const app = express();
 app.use(express.json());
+app.use(cors({origin: "http://localhost:5173", credentials: true}));
+app.use(cookieParser(TOKEN_SECRET));
 
 app.use('/api/notes', checkAuthentication, notesRouter);
 app.use('/api/user', userRouter);

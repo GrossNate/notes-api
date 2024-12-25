@@ -40,6 +40,8 @@ router.post("/login", async (req, res) => {
       const userForToken = {username: loginUser.username};
       safeAssertString(TOKEN_SECRET);
       const token = jsonwebtoken.sign(userForToken, TOKEN_SECRET);
+      res.cookie("username", userForToken.username, {maxAge: 1000*60*60*3});
+      res.cookie("token", token, {maxAge: 1000*60*60*3});
       res.status(200).send({token, username: userForToken.username});
     } else {
       res.status(401).json({ error: "invalid username or password" });
@@ -51,6 +53,11 @@ router.post("/login", async (req, res) => {
       res.status(400).send("Something went wrong.");
     }
   }
+});
+router.get("/logout", (_req, res) => {
+  res.cookie("username", "", {maxAge: 1000});
+  res.cookie("token", "", {maxAge: 1000});
+  res.sendStatus(200);
 });
 
 export default router;
