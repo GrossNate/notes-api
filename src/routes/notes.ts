@@ -1,6 +1,6 @@
 import express from "express";
-import { getNotesZodSchema, postNoteZodSchema } from "../zodSchemas";
-import { addNoteForUser, getNotesForUser, deleteNote } from "../models/notes";
+import { getNotesZodSchema, noteZodSchema, postNoteZodSchema } from "../zodSchemas";
+import { addNoteForUser, getNotesForUser, deleteNote, updateNote } from "../models/notes";
 
 const router = express.Router();
 
@@ -35,8 +35,15 @@ router.delete("/:noteId", async (req, res) => {
   }
 });
 
-router.put("/:noteId", (req, res) => {
-  res.send(`Updating note ${req.params.noteId} with ${req.body}`);
+router.put("/:noteId", async (req, res) => {
+  const { username } = getNotesZodSchema.parse(req.cookies);
+  const updateNoteBody = noteZodSchema.parse(req.body);
+  const result = await updateNote(updateNoteBody, username);
+  if (result.rowCount > 0) {
+    res.status(201).json(result.rows[0]);
+  } else {
+    res.sendStatus(404);
+  }
 });
 
 export default router;

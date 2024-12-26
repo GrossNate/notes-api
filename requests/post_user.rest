@@ -2,6 +2,6 @@ POST http://localhost:3000/api/user/create
 Content-Type: application/json
 
 {
-  "username": "nate2",
-  "clearPassword": "P4ssw0rd"
+  "username": "tester",
+  "clearPassword": "password"
 }

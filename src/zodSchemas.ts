@@ -22,6 +22,13 @@ export const noteRowZodSchema = z.object({
   created_timestamp: z.date()
 });
 
+export const noteZodSchema = z.object({
+  id: z.string(),
+  username: z.string(),
+  content: z.string(),
+  created_timestamp: z.string()
+});
+
 export const noteRowArrayZodSchema = z.array(noteRowZodSchema);
 
 export const postNoteZodSchema = z.object({

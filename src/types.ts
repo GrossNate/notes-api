@@ -9,6 +9,13 @@ export function safeAssertString(val: unknown): asserts val is string {
   }
 }
 
+export interface Note {
+  id: string;
+  username: string;
+  content: string;
+  created_timestamp: string;
+}
+
 export interface NoteRow {
   id: string;
   username: string;
